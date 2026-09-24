@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eefaf8;
+  --color-brand-100: #d5f2ee;
+  --color-brand-500: #14907f;
+  --color-brand-600: #0f7668;
+  --color-brand-700: #0c5e54;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Chart roles (dataviz reference palette, light surface) */
+:root {
+  --viz-surface: #fcfcfb;
+  --viz-series-1: #2a78d6;
+  --viz-series-1-soft: #cde2fb;
+  --viz-raise: #e34948;
+  --viz-lower: #2a78d6;
+  --viz-grid: #e1e0d9;
+  --viz-axis: #c3c2b7;
+  --viz-muted: #898781;
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+}
+
+html,
+body {
+  background: #f6f7f7;
+  color: #0f172a;
+}
+
+.prose-md h2 {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 1rem 0 0.35rem;
+  color: #0c5e54;
+}
+.prose-md h2:first-child {
+  margin-top: 0;
+}
+.prose-md p {
+  margin: 0.25rem 0;
+  line-height: 1.55;
+}
+.prose-md ul {
+  list-style: disc;
+  padding-left: 1.2rem;
+  margin: 0.25rem 0;
+}
+.prose-md li {
+  margin: 0.15rem 0;
+  line-height: 1.5;
+}
+.prose-md strong {
+  font-weight: 600;
+}
