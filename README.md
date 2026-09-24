@@ -64,19 +64,20 @@ With `MONGODB_URI` empty, the backend runs on an in-memory database and reseeds 
 
 Tests: `cd backend && python -m pytest -q tests` (end-to-end, in-memory, AI fallbacks).
 
-## Deploying (same setup as Trustail)
+## Deploying (Render, auto-deploys on push)
 
-The **frontend is hosted on Ember AI** and the **backend on Render**. The repo follows the Ember template layout: a root `package.json` workspace pointing at `frontend/`, `public/error-capture.js`, and the route-tracking script in `app/layout.tsx`, with `output: "standalone"`.
+`render.yaml` defines both services: `painbridge-api` (FastAPI) and `painbridge-web` (Next.js).
 
-1. **Backend (Render):** go to **New → Blueprint**, pick this repo, and click **Apply** (`render.yaml`). Enter:
+**One-time setup**
+1. In Render, go to **New → Blueprint**, pick this GitHub repo, and click **Apply**.
+2. When prompted, enter:
    - `LITELLM_TOKEN`: Duke AI Gateway key
-   - `MONGODB_URI`: Atlas connection string, stored in the `painbridge` database (leave blank for in-memory demo mode)
-   - `CORS_ORIGINS`: your Ember app URL(s), comma-separated
+   - `MONGODB_URI`: Atlas connection string, stored in the `painbridge` database (leave blank for in-memory demo mode, which resets whenever the service sleeps)
+3. Check the API's URL in the dashboard. If it isn't exactly `https://painbridge-api.onrender.com`, update `NEXT_PUBLIC_API_URL` on `painbridge-web` and redeploy it.
 
-   Note the API URL, e.g. `https://painbridge-api.onrender.com`.
-2. **Frontend (Ember AI):** open the repo in Ember and set `NEXT_PUBLIC_API_URL` to the Render API URL. It's read at build time, so rebuild after changing it.
+**Making changes later:** commit and push to `main`. Render rebuilds whichever service changed. Frontend-only changes don't restart the API.
 
-The backend uses Python 3.12.7 (`runtime.txt` / `PYTHON_VERSION`). On Atlas, allow Render's outbound IPs, or `0.0.0.0/0` for a demo, under Network Access.
+Free-plan services sleep after 15 minutes idle, so the first visit afterwards takes about 30–60 seconds. The backend uses Python 3.12.7. On Atlas, allow `0.0.0.0/0` (or Render's outbound IPs) under Network Access.
 
 ## Project structure
 

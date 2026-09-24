@@ -1,5 +1,6 @@
-# Render Blueprint for the backend API (the frontend is hosted by Ember AI, like Trustail).
-# Dashboard -> New -> Blueprint -> pick this repo. `sync: false` values are entered in the dashboard.
+# Render Blueprint: Dashboard -> New -> Blueprint -> pick this repo -> Apply.
+# Creates the API and the website as two free web services. Both auto-deploy on every
+# push to main. `sync: false` values are entered once in the dashboard (never committed).
 services:
   - type: web
     name: painbridge-api
@@ -24,5 +25,28 @@ services:
         sync: false
       - key: LITELLM_MODEL
         value: Mistral on-site
-      - key: CORS_ORIGINS # your Ember app URL(s), comma-separated, e.g. https://painbridge.example.com,http://localhost:3000
-        sync: false
+      - key: CORS_ORIGINS
+        value: http://localhost:3000
+      - key: CORS_ORIGIN_REGEX # the website below, with or without a Render-assigned suffix
+        value: https://painbridge-web(-[a-z0-9]+)?\.onrender\.com
+
+  - type: web
+    name: painbridge-web
+    runtime: node
+    plan: free
+    # Built from the repo root so the root workspace lockfile is used; only
+    # frontend changes trigger a rebuild.
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    buildFilter:
+      paths:
+        - frontend/**
+        - package.json
+        - package-lock.json
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      # If Render gives the API a different URL (it adds a suffix when the name is taken),
+      # change this in the dashboard and redeploy the website.
+      - key: NEXT_PUBLIC_API_URL
+        value: https://painbridge-api.onrender.com
