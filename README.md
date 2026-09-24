@@ -64,18 +64,19 @@ With `MONGODB_URI` empty, the backend runs on an in-memory database and reseeds 
 
 Tests: `cd backend && python -m pytest -q tests` (end-to-end, in-memory, AI fallbacks).
 
-## Deploying (Render)
+## Deploying (same setup as Trustail)
 
-`render.yaml` is a Render Blueprint that defines both services:
+The **frontend is hosted on Ember AI** and the **backend on Render**. The repo follows the Ember template layout: a root `package.json` workspace pointing at `frontend/`, `public/error-capture.js`, and the route-tracking script in `app/layout.tsx`, with `output: "standalone"`.
 
-1. Push this repo to GitHub.
-2. In Render, go to **New → Blueprint**, pick the repo, and click **Apply**.
-3. Fill in the prompted values:
-   - `painbridge-api`: set `LITELLM_TOKEN` (Duke AI Gateway key) and `MONGODB_URI` (Atlas connection string; leave blank for in-memory demo mode).
-   - `painbridge-web`: set `NEXT_PUBLIC_API_URL` to the API's URL, e.g. `https://painbridge-api.onrender.com`.
-4. If Render gives the API a different URL than the one you entered, update `NEXT_PUBLIC_API_URL` and redeploy `painbridge-web`. The value is baked in at build time.
+1. **Backend (Render):** go to **New → Blueprint**, pick this repo, and click **Apply** (`render.yaml`). Enter:
+   - `LITELLM_TOKEN`: Duke AI Gateway key
+   - `MONGODB_URI`: Atlas connection string, stored in the `painbridge` database (leave blank for in-memory demo mode)
+   - `CORS_ORIGINS`: your Ember app URL(s), comma-separated
 
-The backend uses Python 3.12.7 (`runtime.txt` / `PYTHON_VERSION`). CORS allows `https://painbridge-web*.onrender.com` through `CORS_ORIGIN_REGEX`. On Atlas, allow Render's outbound IPs, or `0.0.0.0/0` for a demo, under Network Access.
+   Note the API URL, e.g. `https://painbridge-api.onrender.com`.
+2. **Frontend (Ember AI):** open the repo in Ember and set `NEXT_PUBLIC_API_URL` to the Render API URL. It's read at build time, so rebuild after changing it.
+
+The backend uses Python 3.12.7 (`runtime.txt` / `PYTHON_VERSION`). On Atlas, allow Render's outbound IPs, or `0.0.0.0/0` for a demo, under Network Access.
 
 ## Project structure
 

@@ -1,6 +1,5 @@
-# Render Blueprint: Dashboard -> New -> Blueprint -> pick this repo.
-# Creates the FastAPI backend and the Next.js frontend as two free web services.
-# Values marked `sync: false` are prompted for in the dashboard (never committed).
+# Render Blueprint for the backend API (the frontend is hosted by Ember AI, like Trustail).
+# Dashboard -> New -> Blueprint -> pick this repo. `sync: false` values are entered in the dashboard.
 services:
   - type: web
     name: painbridge-api
@@ -25,20 +24,5 @@ services:
         sync: false
       - key: LITELLM_MODEL
         value: Mistral on-site
-      - key: CORS_ORIGINS
-        value: http://localhost:3000
-      - key: CORS_ORIGIN_REGEX
-        value: https://painbridge-web(-[a-z0-9]+)?\.onrender\.com
-
-  - type: web
-    name: painbridge-web
-    runtime: node
-    plan: free
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    envVars:
-      - key: NODE_VERSION
-        value: 22
-      - key: NEXT_PUBLIC_API_URL # the painbridge-api URL, e.g. https://painbridge-api.onrender.com
+      - key: CORS_ORIGINS # your Ember app URL(s), comma-separated, e.g. https://painbridge.example.com,http://localhost:3000
         sync: false
