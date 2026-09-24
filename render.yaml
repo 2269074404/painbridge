@@ -36,7 +36,9 @@ services:
     plan: free
     # Built from the repo root so the root workspace lockfile is used; only
     # frontend changes trigger a rebuild.
-    buildCommand: npm install && npm run build
+    # --include=dev: Tailwind/TypeScript are devDependencies but are needed to build,
+    # and npm skips them when NODE_ENV=production.
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm start
     buildFilter:
       paths:
